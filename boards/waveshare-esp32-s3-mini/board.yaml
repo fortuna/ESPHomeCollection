@@ -11,11 +11,7 @@ esp32:
   board: esp32-s3-devkitm-1
   variant: esp32s3
   framework:
-    type: idf
-    # version: 5.2.1
-    # platform_version: 6.7.0
-    # sdkconfig_options:
-    #   CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y
+    type: esp-idf
 
 binary_sensor:
   - id: boot_button
@@ -36,5 +32,3 @@ light:
     chipset: WS2812
     num_leds: 1
     rgb_order: rgb
-    rmt_channel: 0
-
