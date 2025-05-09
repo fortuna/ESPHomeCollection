@@ -32,5 +32,3 @@ light:
     chipset: WS2812
     num_leds: 1
     rgb_order: rgb
-    rmt_channel: 0
-
