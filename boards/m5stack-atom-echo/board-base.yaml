@@ -1,0 +1,43 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+
+# See https://docs.m5stack.com/en/atom/atomecho.
+esphome:
+
+esp32:
+  board: m5stack-atom
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+
+binary_sensor:
+  - id: echo_button
+    name: Function Button
+    platform: gpio
+    pin:
+      number: GPIO39
+      inverted: true
+    disabled_by_default: true
+    entity_category: DIAGNOSTIC
+
+light:
+  - id: echo_led
+    name: RGB Led
+    platform: esp32_rmt_led_strip
+    disabled_by_default: true
+    entity_category: CONFIG
+    pin: GPIO27
+    default_transition_length: 0s
+    chipset: SK6812
+    num_leds: 1
+    rgb_order: grb
+    rmt_channel: 0
+
+remote_transmitter:
+  - id: echo_ir_tx
+    pin: GPIO12
+    # For IR LEDs, as per
+    # https://esphome.io/components/remote_transmitter.html#configuration-variables.
+    carrier_duty_percent: 50%
+    # Make sure this doesn't conflict with the LED.
+    rmt_channel: 1

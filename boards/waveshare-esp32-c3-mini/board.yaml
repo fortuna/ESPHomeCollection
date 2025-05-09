@@ -1,0 +1,36 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+
+esphome:
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: esp32c3
+  framework:
+    type: esp-idf
+    # version: 5.2.1
+    # platform_version: 6.7.0
+    # sdkconfig_options:
+    #   CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y
+
+binary_sensor:
+  - id: boot_button
+    platform: gpio
+    name: Boot Button
+    pin:
+      number: GPIO09
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+
+light:
+  - id: rgb
+    name: Board RGB Light
+    platform: esp32_rmt_led_strip
+    pin: GPIO10
+    chipset: WS2812
+    num_leds: 1
+    rgb_order: rgb
+    rmt_channel: 0
+

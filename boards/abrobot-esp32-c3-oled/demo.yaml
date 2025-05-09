@@ -1,0 +1,35 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+
+# This demo toggles the LED on the board and the Hello World! greeting
+# on the OLED display when the boot button is pressed.
+
+packages:
+  board: !include ./board.yaml
+
+esphome:
+  name: board-demo
+  friendly_name: Board Demo
+
+logger:
+
+binary_sensor:
+  - id: !extend boot_button
+    on_release:
+      - light.toggle:
+          id: led
+          transition_length: 0.1s
+
+display:
+  - id: !extend oled_display
+    update_interval: 0.1s
+    lambda: |-
+      it.rectangle(0, 0, 71, 39);
+      if (id(led).current_values.is_on()) {
+        it.print(36, 20, id(roboto_11), TextAlign::CENTER, "Hello World!");
+      }
+
+font:
+  - file: gfonts://Roboto
+    id: roboto_11
+    size: 11

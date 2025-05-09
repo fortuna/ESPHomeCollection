@@ -1,0 +1,50 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+#
+# Bought from https://www.amazon.com/dp/B0D47K5RW3
+# Schematics: https://wiki.icbbuy.com/doku.php?spm=a2g0o.detail.1000023.1.23b2WS6nWS6nb1&id=developmentboard:esp32-c6mini
+
+# TODO: Set up UART logging.
+# Notes: https://docs.espressif.com/projects/esp-at/en/latest/esp32c6/Get_Started/Hardware_connection.html#esp32c6-4mb-series
+
+# external_components:
+#   - source:
+#       type: git
+#       url: https://github.com/edwardtfn/esphome
+#     components: [ adc ]
+
+esphome:
+
+esp32:
+  board: esp32-c6-devkitm-1
+  variant: esp32c6
+  framework:
+    type: esp-idf
+
+binary_sensor:
+  - id: boot_button
+    platform: gpio
+    name: Boot Button
+    pin:
+      number: GPIO09
+      inverted: true
+
+output:
+  - id: led_output
+    platform: ledc
+    pin: GPIO15
+
+light:
+  - id: led
+    name: Board LED
+    platform: monochromatic
+    output: led_output
+
+  - id: rgb
+    name: Board RGB Light
+    platform: esp32_rmt_led_strip
+    pin: GPIO08
+    chipset: WS2812
+    num_leds: 1
+    rgb_order: grb
+    rmt_channel: 0

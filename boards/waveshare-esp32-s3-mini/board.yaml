@@ -1,0 +1,40 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+
+# Product Page: https://www.waveshare.com/esp32-s3-zero.htm
+# Reference: https://www.waveshare.com/wiki/ESP32-S3-Zero
+# Schematic: https://files.waveshare.com/wiki/ESP32-S3-Zero/ESP32-S3-Zero-Sch.pdf
+
+esphome:
+
+esp32:
+  board: esp32-s3-devkitm-1
+  variant: esp32s3
+  framework:
+    type: idf
+    # version: 5.2.1
+    # platform_version: 6.7.0
+    # sdkconfig_options:
+    #   CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y
+
+binary_sensor:
+  - id: boot_button
+    platform: gpio
+    name: Boot Button
+    pin:
+      number: GPIO00
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+
+light:
+  - id: rgb
+    name: Board RGB Light
+    platform: esp32_rmt_led_strip
+    pin: GPIO21
+    chipset: WS2812
+    num_leds: 1
+    rgb_order: rgb
+    rmt_channel: 0
+

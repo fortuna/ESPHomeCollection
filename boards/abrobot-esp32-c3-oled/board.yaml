@@ -1,0 +1,49 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+#
+# Bought from https://www.aliexpress.com/item/3256807961613241.html
+# References:
+#  - https://emalliab.wordpress.com/2025/02/12/esp32-c3-0-42-oled/
+#  - https://github.com/zhuhai-esp/ESP32-C3-ABrobot-OLED/tree/main/Document
+
+esphome:
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: esp32c3
+  framework:
+    type: esp-idf
+  
+binary_sensor:
+  - id: boot_button
+    platform: gpio
+    name: Boot Button
+    pin:
+      number: GPIO09
+      inverted: true
+
+output:
+  - id: led_output
+    platform: ledc
+    pin:
+      number: GPIO08
+      inverted: true
+
+light:
+  - id: led
+    name: Board LED
+    platform: monochromatic
+    output: led_output
+
+i2c:
+  sda: GPIO05
+  scl: GPIO06
+  id: i2c_bus
+  frequency: 400 kHz 
+
+display:
+  - id: oled_display
+    platform: ssd1306_i2c
+    model: "SSD1306 72x40"
+    i2c_id: i2c_bus
+    address: 0x3C
