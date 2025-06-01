@@ -25,7 +25,7 @@ packages:
 
 Replace `esp32-s3-box-3` with the directory name of the board you want to use.
 
-See [ESPHome Packages] for details and how to customize the import.
+See [ESPHome Packages] for how package imports work.
 
 [ESPHome Packages]: https://esphome.io/components/packages.html
 
@@ -50,7 +50,7 @@ Again, replace `esp32-s3-box-3` with the directory name of the demo you want to 
 Then run it from your local file. For example:
 
 ```sh
-esphome run .demo.yaml
+esphome run ./demo.yaml
 ```
 
 ## TODO
