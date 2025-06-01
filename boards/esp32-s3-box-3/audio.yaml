@@ -24,11 +24,11 @@ audio_dac:
 microphone:
   - id: box_microphone
     platform: i2s_audio
+    adc_type: external
     i2s_audio_id: i2s_audio_bus
     sample_rate: 16000
     i2s_din_pin: GPIO16  # I2S_ADC_SDOUT
     bits_per_sample: 16bit
-    adc_type: external
 
 speaker:
   - id: box_speaker
@@ -38,8 +38,18 @@ speaker:
     dac_type: external
     sample_rate: 48000
     bits_per_sample: 16bit
-    channel: left
+    channel: mono
     audio_dac: es8311_dac
     buffer_duration: 100ms
 
-# TODO: media player
+switch:
+  - platform: gpio
+    name: Enable Speaker
+    id: enable_speaker
+    pin: GPIO46
+    # I've wasted hours of my life trying to figure out why the speaker
+    # was not working, only to find out that the GPIO46 pin needs to be
+    # set to HIGH to enable the speaker. Let's make it ON by default.
+    restore_mode: RESTORE_DEFAULT_ON
+    entity_category: config
+    disabled_by_default: true
