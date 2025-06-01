@@ -5,6 +5,7 @@
 esphome:
 
 esp32:
+  # TODO: consider https://docs.platformio.org/en/stable/boards/espressif32/pico32.html?
   board: m5stack-atom
   flash_size: 4MB
   framework:
