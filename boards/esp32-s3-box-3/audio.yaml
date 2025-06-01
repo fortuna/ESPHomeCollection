@@ -22,7 +22,7 @@ audio_dac:
     sample_rate: 48000
 
 microphone:
-  - id: board_mic
+  - id: box_microphone
     platform: i2s_audio
     i2s_audio_id: i2s_audio_bus
     sample_rate: 16000

@@ -7,6 +7,11 @@ packages:
 esphome:
   name: board-demo
   friendly_name: Board Demo
+  on_boot:
+    priority: -100
+    then:
+      - logger.log: "Board Demo started"
+      - micro_wake_word.start:
 
 logger:
 
@@ -20,3 +25,19 @@ web_server:
 
 lvgl:
   displays: [box_display]
+
+micro_wake_word:
+  microphone:
+    microphone: box_microphone
+    channels: 0
+    gain_factor: 4
+  vad:
+  models:
+    - id: okay_nabu_model
+      model: okay_nabu
+  stop_after_detection: false
+  on_wake_word_detected:
+    then:
+      - logger.log:
+          format: "Wake word detected: %s"
+          args: ['wake_word.c_str()']
