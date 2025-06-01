@@ -5,8 +5,6 @@
 # Reference: https://www.waveshare.com/wiki/ESP32-S3-Zero
 # Schematic: https://files.waveshare.com/wiki/ESP32-S3-Zero/ESP32-S3-Zero-Sch.pdf
 
-esphome:
-
 esp32:
   board: esp32-s3-devkitm-1
   variant: esp32s3

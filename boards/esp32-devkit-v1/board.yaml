@@ -1,8 +1,6 @@
 # Copyright 2025 Vinicius Fortuna
 # SPDX-License-Identifier: 	Apache-2.0
 
-esphome:
-
 esp32:
   board: esp32dev
   # board: esp32doit-devkit-v1

@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: 	Apache-2.0
 
 # See https://docs.m5stack.com/en/atom/atomecho.
-esphome:
 
 esp32:
   # TODO: consider https://docs.platformio.org/en/stable/boards/espressif32/pico32.html?
