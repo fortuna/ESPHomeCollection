@@ -11,6 +11,8 @@ esphome:
     priority: -100
     then:
       - logger.log: "Board Demo started"
+      - micro_wake_word.enable_model: okay_nabu
+      - micro_wake_word.enable_model: stop
       - micro_wake_word.start:
 
 logger:
@@ -33,8 +35,11 @@ micro_wake_word:
     gain_factor: 4
   vad:
   models:
-    - id: okay_nabu_model
-      model: okay_nabu
+    - model: https://github.com/kahrendt/microWakeWord/releases/download/okay_nabu_20241226.3/okay_nabu.json
+      id: okay_nabu
+    - model: https://github.com/kahrendt/microWakeWord/releases/download/stop/stop.json
+      id: stop
+      internal: true
   stop_after_detection: false
   on_wake_word_detected:
     then:
