@@ -1,0 +1,47 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+
+output:
+  - id: box_display_backlight
+    platform: ledc
+    pin: GPIO47  # LCD_CTRL
+
+light:
+  - id: led
+    platform: monochromatic
+    name: Display Backlight
+    icon: "mdi:television"
+    entity_category: config
+    output: box_display_backlight
+    restore_mode: RESTORE_DEFAULT_ON
+    default_transition_length: 0ms
+
+display:
+  - id: box_display
+    # Display driver is ILI9432C.
+    platform: ili9xxx
+    model: S3BOX
+    spi_id: spi_bus
+    invert_colors: false
+    # Source: https://github.com/espressif/esp-box/blob/master/docs/hardware_overview/esp32_s3_box_3/hardware_overview_for_box_3.md
+    data_rate: 40MHz
+    cs_pin: GPIO5  # LCD_CS
+    dc_pin: GPIO4  # LCD_DC
+    reset_pin:  # LCD_RST
+      number: GPIO48
+      inverted: true  # GPIO48 -> GPIO48_L
+    update_interval: never
+    auto_clear_enabled: false
+
+touchscreen:
+  - id: box_touchscreen
+    platform: gt911
+    i2c_id: i2c_bus
+    display: box_display
+
+binary_sensor:
+  - # Red circle under the screen
+    id: home_button
+    platform: gt911
+    name: "Home Button"
+    index: 0

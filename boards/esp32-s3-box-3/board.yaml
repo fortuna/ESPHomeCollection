@@ -1,0 +1,57 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+
+# Datasheet: https://github.com/espressif/esp-box/blob/master/hardware/SCH_ESP32-S3-BOX-3_V1.0/SCH_ESP32-S3-BOX-3-MB_V1.1_20230808.pdf
+#
+# References:
+# - https://github.com/espressif/esp-box/blob/master/docs/hardware_overview/esp32_s3_box_3/hardware_overview_for_box_3.md
+# - https://github.com/espressif/esp-box/blob/master/docs/getting_started.md
+
+packages:
+  audio: !include ./audio.yaml
+  display: !include ./display.yaml
+
+esphome:
+
+esp32:
+  # Definition: https://github.com/platformio/platform-espressif32/blob/master/boards/esp32s3box.json
+  board: esp32s3box
+  variant: esp32s3
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+
+psram:
+  mode: octal
+  # The device supports 120MHz, but ESPHome refuses to use it.
+  speed: 80MHz
+
+i2c:
+  - id: i2c_bus
+    scl: GPIO18  # I2C_SCL
+    sda: GPIO8  # I2C_SDA
+    scan: true
+    frequency: 400kHz
+
+spi:
+  - id: spi_bus
+    clk_pin: GPIO7  # LCD_SCK
+    mosi_pin: GPIO6  # LCD_SDA
+
+binary_sensor:
+  - id: boot_button
+    platform: gpio
+    name: Boot Button
+    pin:
+      number: GPIO0  # MCU_BOOT
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+
+  - id: mute_status
+    platform: gpio
+    name: Mute Status
+    pin:
+      number: GPIO1  # MUTE_STATUS_L
+      inverted: true

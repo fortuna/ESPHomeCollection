@@ -1,0 +1,22 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+
+packages:
+  board: !include ./board.yaml
+
+esphome:
+  name: board-demo
+  friendly_name: Board Demo
+
+logger:
+
+wifi:
+  ap:
+
+captive_portal:
+
+web_server:
+  version: 3
+
+lvgl:
+  displays: [box_display]

@@ -1,0 +1,45 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+
+i2s_audio:
+  - id: i2s_audio_bus
+    i2s_lrclk_pin: GPIO45  # I2S_LRCK
+    i2s_bclk_pin: GPIO17  # I2S_SCLK
+    i2s_mclk_pin: GPIO2  # I2S_MCLK
+
+audio_adc:
+  - id: es7210_adc
+    platform: es7210
+    i2c_id: i2c_bus
+    bits_per_sample: 16bit
+    sample_rate: 16000
+
+audio_dac:
+  - id: es8311_dac
+    platform: es8311
+    i2c_id: i2c_bus
+    bits_per_sample: 16bit
+    sample_rate: 48000
+
+microphone:
+  - id: board_mic
+    platform: i2s_audio
+    i2s_audio_id: i2s_audio_bus
+    sample_rate: 16000
+    i2s_din_pin: GPIO16  # I2S_ADC_SDOUT
+    bits_per_sample: 16bit
+    adc_type: external
+
+speaker:
+  - id: box_speaker
+    platform: i2s_audio
+    i2s_audio_id: i2s_audio_bus
+    i2s_dout_pin: GPIO15  # I2S_CODEC_DSDIN
+    dac_type: external
+    sample_rate: 48000
+    bits_per_sample: 16bit
+    channel: left
+    audio_dac: es8311_dac
+    buffer_duration: 100ms
+
+# TODO: media player

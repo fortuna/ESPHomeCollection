@@ -13,6 +13,9 @@ esphome run ./boards/${BOARD}/demo.yaml
 ```
 
 TODO:
-  - Create index table
-  - Add demos
-  - Test
+  - Explain how to use the board definitions.
+  - Add demos and test:
+    - M5Stack Atom Echo
+    - ESP32 dev board
+  - Add ESP32-C6 dev board
+  - Create nice index table
