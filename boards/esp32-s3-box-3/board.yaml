@@ -53,3 +53,6 @@ binary_sensor:
     pin:
       number: GPIO1  # MUTE_STATUS_L
       inverted: true
+    on_release:
+      # We need to reinitialize the ES2710 because it loses power on hardware mute.
+      - lambda: id(es7210_adc)->setup();

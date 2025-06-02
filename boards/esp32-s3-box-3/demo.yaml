@@ -92,8 +92,6 @@ media_player:
           speaker.is_stopped: box_speaker
       - logger.log: Speaker stopped
       # Resume wake word dection once the i2s is released.
-      # TODO: Figure out why resumption is not working after the hardware
-      # mute is toggled off and on.
       # TODO: Figure out how to use i2s full duplex mode to avoid this.
       - micro_wake_word.start:
       - wait_until:
