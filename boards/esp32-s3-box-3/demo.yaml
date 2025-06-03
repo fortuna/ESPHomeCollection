@@ -35,7 +35,7 @@ micro_wake_word:
     gain_factor: 4
   vad:
   models:
-    - model: https://github.com/kahrendt/microWakeWord/releases/download/okay_nabu_20241226.3/okay_nabu.json
+    - model: hey_jarvis  # https://github.com/kahrendt/microWakeWord/releases/download/okay_nabu_20241226.3/okay_nabu.json
       id: okay_nabu
     - model: https://github.com/kahrendt/microWakeWord/releases/download/stop/stop.json
       id: stop
@@ -48,7 +48,8 @@ micro_wake_word:
           args: ['wake_word.c_str()']
       - if:
           condition:
-            lambda: 'return wake_word == "Okay Nabu";'
+            lambda: 'return wake_word == "Hey Jarvis";'
+            # lambda: 'return wake_word == "Okay Nabu";'
           then:
             - media_player.speaker.play_on_device_media_file:
                 id: main_media_player
@@ -62,7 +63,7 @@ media_player:
     volume_min: 0.1
     volume_max: 0.8
     announcement_pipeline:
-      speaker: box_speaker
+      speaker: announcement_resampling_speaker
       format: FLAC
       num_channels: 1  # Stereo is unnecessary for announcements.
 
@@ -78,9 +79,9 @@ media_player:
     on_announcement:
       - logger.log: Media player announcing
       # The microphone needs to release the i2s before we can use it for playback.
-      - micro_wake_word.stop:
+      # - micro_wake_word.stop:
       - wait_until:
-          speaker.is_playing: box_speaker
+          speaker.is_playing: announcement_resampling_speaker
       - logger.log: Speaker is playing
     on_play: 
       - logger.log: Media player playing
@@ -89,19 +90,19 @@ media_player:
     on_idle: 
       - logger.log: Media player is idle
       - wait_until:
-          speaker.is_stopped: box_speaker
+          speaker.is_stopped: announcement_resampling_speaker
       - logger.log: Speaker stopped
       # Resume wake word dection once the i2s is released.
       # TODO: Figure out how to use i2s full duplex mode to avoid this.
-      - micro_wake_word.start:
-      - wait_until:
-          microphone.is_capturing: box_microphone
-      - logger.log: Microphone is capturing
+      # - micro_wake_word.start:
+      # - wait_until:
+      #     microphone.is_capturing: box_microphone
+      # - logger.log: Microphone is capturing
 
 binary_sensor:
   - id: !extend mute_status
     on_press:
-      - micro_wake_word.stop:
+      # - micro_wake_word.stop:
       - media_player.speaker.play_on_device_media_file:
           id: main_media_player
           media_file: mute_switch_on_sound
@@ -111,3 +112,10 @@ binary_sensor:
           id: main_media_player
           media_file: mute_switch_off_sound
           announcement: true
+
+speaker:
+  - id: announcement_resampling_speaker
+    platform: resampler
+    output_speaker: box_speaker
+    sample_rate: 16000
+    bits_per_sample: 16
