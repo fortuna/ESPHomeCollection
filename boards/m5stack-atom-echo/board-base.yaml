@@ -31,7 +31,6 @@ light:
     chipset: SK6812
     num_leds: 1
     rgb_order: grb
-    rmt_channel: 0
 
 remote_transmitter:
   - id: echo_ir_tx
@@ -39,5 +38,3 @@ remote_transmitter:
     # For IR LEDs, as per
     # https://esphome.io/components/remote_transmitter.html#configuration-variables.
     carrier_duty_percent: 50%
-    # Make sure this doesn't conflict with the LED.
-    rmt_channel: 1
