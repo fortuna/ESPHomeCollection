@@ -11,7 +11,7 @@ esp32:
   variant: esp32c3
   framework:
     type: esp-idf
-  
+
 binary_sensor:
   - id: boot_button
     platform: gpio
@@ -37,7 +37,7 @@ i2c:
   sda: GPIO05
   scl: GPIO06
   id: i2c_bus
-  frequency: 400 kHz 
+  frequency: 400 kHz
 
 display:
   - id: oled_display

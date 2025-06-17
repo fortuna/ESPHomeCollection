@@ -9,7 +9,7 @@ external_components:
       type: git
       url: https://github.com/gnumpi/esphome_audio
       ref: main
-    components: [ adf_pipeline, i2s_audio ]
+    components: [adf_pipeline, i2s_audio]
 
 # See https://github.com/gnumpi/esphome_audio?tab=readme-ov-file#adf-pipeline-configurations
 # and https://github.com/gnumpi/esphome_audio/blob/main/examples/m5stack-atom-echo-adf.yaml.

@@ -40,8 +40,8 @@ touchscreen:
     display: box_display
 
 binary_sensor:
-  - # Red circle under the screen
-    id: home_button
+  # Red circle under the screen
+  - id: home_button
     platform: gt911
     name: "Home Button"
     index: 0
