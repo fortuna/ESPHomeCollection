@@ -14,7 +14,6 @@ packages:
 esp32:
   # Definition: https://github.com/platformio/platform-espressif32/blob/master/boards/esp32s3box.json
   board: esp32s3box
-  variant: esp32s3
   flash_size: 16MB
   framework:
     type: esp-idf
