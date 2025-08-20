@@ -1,0 +1,20 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+
+# This demo toggles the LED on the board when the boot button is pressed.
+
+packages:
+  board: !include ./board.yaml
+
+esphome:
+  name: board-demo
+  friendly_name: Board Demo
+
+logger:
+
+binary_sensor:
+  - id: !extend boot_button
+    on_release:
+      - light.toggle:
+          id: led
+          transition_length: 0.5s
