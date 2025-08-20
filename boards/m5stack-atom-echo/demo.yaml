@@ -1,0 +1,43 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: 	Apache-2.0
+
+# This demo exercises the button, LED, IR transmitter, speaker and microphone.
+# When the button is pressed, it will:
+# - Toggle the LED
+# - Send an IR command
+# - Play a tone on the speaker
+# The microphone is used by the VAD sensor, which logs when it detects speech.
+
+packages:
+  board: !include ./board.yaml
+
+esphome:
+  name: board-demo
+  friendly_name: Board Demo
+
+logger:
+
+binary_sensor:
+  - id: !extend echo_button
+    on_release:
+      - light.toggle:
+          id: echo_led
+          transition_length: 0.5s
+      - remote_transmitter.transmit_nec:
+          address: 0x1234
+          command: 0x5678
+      - rtttl.play:
+          id: rtttl_player
+          rtttl: scale_up:d=32,o=5,b=100:c,c#,d#,e,f#,g#,a#,b
+      # Work around RTTTL player getting stuck after first play.
+      # See https://github.com/esphome/esphome/issues/10312
+      - lambda: |-
+          id(rtttl_player).enable_loop();
+
+rtttl:
+  - id: rtttl_player
+    speaker: echo_speaker
+    gain: 0.3
+    on_finished_playback: 
+      then:
+        - logger.log: Finished playing RTTTL tune.
