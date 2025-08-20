@@ -6,7 +6,6 @@
 esp32:
   # TODO: consider https://docs.platformio.org/en/stable/boards/espressif32/pico32.html?
   board: m5stack-atom
-  flash_size: 4MB
   framework:
     type: esp-idf
 
@@ -17,14 +16,11 @@ binary_sensor:
     pin:
       number: GPIO39
       inverted: true
-    disabled_by_default: true
-    entity_category: DIAGNOSTIC
 
 light:
   - id: echo_led
     name: RGB Led
     platform: esp32_rmt_led_strip
-    disabled_by_default: true
     entity_category: CONFIG
     pin: GPIO27
     default_transition_length: 0s
