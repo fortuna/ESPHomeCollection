@@ -53,9 +53,40 @@ Then run it from your local file. For example:
 esphome run ./demo.yaml
 ```
 
+## Development
+
+You need to install the `esphome` and `yamllint` Python binaries.
+
+On macOS, if you have Homebrew installed, you can use:
+
+```sh
+brew install esphome yamllint
+```
+
+On other platforms, it may be easier to use `pipx run`, but you need `pipx` installed.
+
+To quickly validate a config, use `esphome config`. For example:
+
+```sh
+esphome config boards/esp32-s3-box-3/demo.yaml
+```
+
+You must run `esphome config` on the demo files, because the board definitions are incomplete ESPHome configs and will fail validation.
+
+To lint all files:
+
+```sh
+yamllint .
+```
+
+You can validate all configs and lint them in one command:
+
+```sh
+esphome config boards/*/demo.yaml && yamllint .
+```
+
 ## TODO
   - Add demos and test:
     - M5Stack Atom Echo
-    - ESP32 dev board
   - Add ESP32-C6 dev board
   - Create nice index table
