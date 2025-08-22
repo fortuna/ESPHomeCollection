@@ -1,43 +1,34 @@
 # Copyright 2025 Vinicius Fortuna
-# SPDX-License-Identifier: 	Apache-2.0
+# SPDX-License-Identifier:  Apache-2.0
 
-# This demo exercises the button, LED, IR transmitter, speaker and microphone.
-# When the button is pressed, it will:
-# - Toggle the LED
-# - Send an IR command
-# - Play a tone on the speaker
-# The microphone is used by the VAD sensor, which logs when it detects speech.
+# This demo exercises the microphone as an Analog Sound Level Meter.
+# It continuously measures the ambient noise level and sets the light
+# brightness to match the sound level.
 
 packages:
   board: !include ./board.yaml
 
 esphome:
-  name: board-demo
-  friendly_name: Board Demo
+  name: sound-level-meter
+  friendly_name: Sound Level Meter
 
 logger:
 
-binary_sensor:
-  - id: !extend echo_button
-    on_release:
-      - light.toggle:
-          id: echo_led
-          transition_length: 0.5s
-      - remote_transmitter.transmit_nec:
-          address: 0x1234
-          command: 0x5678
-      - rtttl.play:
-          id: rtttl_player
-          rtttl: scale_up:d=32,o=5,b=100:c,c#,d#,e,f#,g#,a#,b
-      # Work around RTTTL player getting stuck after first play.
-      # See https://github.com/esphome/esphome/issues/10312
-      - lambda: |-
-          id(rtttl_player).enable_loop();
-
-rtttl:
-  - id: rtttl_player
-    speaker: echo_speaker
-    gain: 0.3
-    on_finished_playback:
-      then:
-        - logger.log: Finished playing RTTTL tune.
+sensor:
+  - platform: sound_level
+    microphone: echo_microphone
+    id: sound_level_sensor
+    passive: false
+    measurement_duration: 50ms
+    rms:
+      name: "Sound Level"
+      unit_of_measurement: "%"
+      accuracy_decimals: 1
+      filters:
+        - multiply: 100
+      on_value:
+        then:
+          - light.turn_on:
+              id: echo_led
+              # The sensor value is from 0.0 to 1.0.
+              brightness: !lambda "return x / 100.0;"
