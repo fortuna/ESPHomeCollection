@@ -28,6 +28,18 @@ from possibly backwards-imcompatible changes.
 
 See [ESPHome Packages] for details on how package imports work.
 
+To modify or extend the defined components, including to add an automations, use the `!extend` tag,
+as explained in the [Packages documentation](https://esphome.io/components/packages/#extend). For example:
+
+```yaml
+binary_sensor:
+  - id: !extend boot_button
+    on_release:
+      - light.toggle:
+          id: led
+          transition_length: 0.1s
+```
+
 [ESPHome Packages]: https://esphome.io/components/packages.html
 
 ## Trying out the demos
