@@ -5,6 +5,12 @@
 # It continuously measures the ambient noise level and sets the light
 # brightness to match the sound level.
 
+# The installer can have trouble finding the optimal baud rate for flashing.
+# It may fail the first attempt and fallback to a slow mode. Sometimes the second
+# attempt fails because the serial port wasn't released yet.
+# It's recommended to set the upload speed explicitly to 1.5MHz:
+# esphome run --upload_speed 1500000 boards/m5stack-atom-echo/demo.yaml
+
 packages:
   board: !include ./board.yaml
 
