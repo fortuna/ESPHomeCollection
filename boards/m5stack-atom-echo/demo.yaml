@@ -38,6 +38,6 @@ rtttl:
   - id: rtttl_player
     speaker: echo_speaker
     gain: 0.3
-    on_finished_playback: 
+    on_finished_playback:
       then:
         - logger.log: Finished playing RTTTL tune.
