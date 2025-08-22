@@ -1,5 +1,5 @@
 # Copyright 2025 Vinicius Fortuna
-# SPDX-License-Identifier:  Apache-2.0
+# SPDX-License-Identifier: Apache-2.0
 
 # This demo exercises the microphone as an Analog Sound Level Meter.
 # It continuously measures the ambient noise level and sets the light
@@ -9,8 +9,8 @@ packages:
   board: !include ./board.yaml
 
 esphome:
-  name: sound-level-meter
-  friendly_name: Sound Level Meter
+  name: board-demo
+  friendly_name: Board Demo
 
 logger:
 
@@ -21,9 +21,9 @@ microphone:
     correct_dc_offset: true
 
 sensor:
-  - platform: sound_level
+  - id: sound_level_sensor
+    platform: sound_level
     microphone: echo_microphone
-    id: sound_level_sensor
     passive: false
     measurement_duration: 50ms
     rms:
@@ -43,3 +43,27 @@ sensor:
                 if (brightness < 0.0) brightness = 0.0;
                 if (brightness > 1.0) brightness = 1.0;
                 return brightness;
+
+rtttl:
+  - id: rtttl_player
+    speaker: echo_speaker
+    gain: 0.3
+    on_finished_playback:
+      then:
+        - logger.log: Finished playing RTTTL tune.
+
+binary_sensor:
+  - id: !extend echo_button
+    on_release:
+      - remote_transmitter.transmit_nec:
+          address: 0x1234
+          command: 0x5678
+          # yamllint disable-line rule:comments-indentation
+      # TODO: Make this work with the microphone.
+      # - rtttl.play:
+      #     id: rtttl_player
+      #     rtttl: scale_up:d=32,o=5,b=100:c,c#,d#,e,f#,g#,a#,b
+      # # Work around RTTTL player getting stuck after first play.
+      # # See https://github.com/esphome/esphome/issues/10312
+      # - lambda: |-
+      #     id(rtttl_player).enable_loop();
