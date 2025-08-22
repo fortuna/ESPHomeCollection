@@ -22,13 +22,18 @@ sensor:
     measurement_duration: 50ms
     rms:
       name: "Sound Level"
-      unit_of_measurement: "%"
-      accuracy_decimals: 1
-      filters:
-        - multiply: 100
       on_value:
         then:
           - light.turn_on:
               id: echo_led
-              # The sensor value is from 0.0 to 1.0.
-              brightness: !lambda "return x / 100.0;"
+              brightness: !lambda |-
+                // The sound level is in dB, from approx -80 (quiet) to 0 (loud).
+                // Map it to a brightness from 0.0 to 1.0.
+                // We'll use a range of -60 to 0 dB.
+                const float db_min = -60.0;
+                const float db_max = 0.0;
+                float brightness = (x - db_min) / (db_max - db_min);
+                // Clamp to the valid range
+                if (brightness < 0.0) brightness = 0.0;
+                if (brightness > 1.0) brightness = 1.0;
+                return brightness;
