@@ -14,6 +14,12 @@ esphome:
 
 logger:
 
+microphone:
+  - id: !extend echo_microphone
+    # Without this, the sound level is squished in a narrow range
+    # aroung -30 dB.
+    correct_dc_offset: true
+
 sensor:
   - platform: sound_level
     microphone: echo_microphone
@@ -31,7 +37,7 @@ sensor:
                 // Map it to a brightness from 0.0 to 1.0.
                 // We'll use a range of -60 to 0 dB.
                 const float db_min = -60.0;
-                const float db_max = 0.0;
+                const float db_max = -25.0;
                 float brightness = (x - db_min) / (db_max - db_min);
                 // Clamp to the valid range
                 if (brightness < 0.0) brightness = 0.0;
