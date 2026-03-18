@@ -12,6 +12,10 @@ esphome:
     then:
       - switch.turn_on: enable_speaker_amp
       - delay: 500ms
+      # Set a reasonable default volume
+      - speaker.volume_set:
+          id: main_speaker
+          volume: 0.5
       - light.turn_on:
           id: status_led
           red: 0%
@@ -22,21 +26,9 @@ esphome:
 
 logger:
 
-# RTTTL hardcodes 16 kHz internally, so override the DAC and speaker sample rate.
-audio_dac:
-  - id: !extend es8311_dac
-    sample_rate: 16000
-    # buffer_duration: 100ms
-    #mic_gain: 30dB
-
-speaker:
-  - id: !extend main_speaker
-    sample_rate: 16000
-    # buffer_duration: 500ms
-
 rtttl:
   speaker: main_speaker
-  gain: 1.0
+  gain: 0.2
 
 # Boot button: play a sound and toggle LED
 binary_sensor:

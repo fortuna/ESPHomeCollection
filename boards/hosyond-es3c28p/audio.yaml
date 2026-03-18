@@ -30,7 +30,6 @@ microphone:
     bits_per_sample: 16bit
     sample_rate: 48000
 
-# TODO(fortuna): I couldn't get the speaker to work yet. I just hear a "pop".
 speaker:
   - id: main_speaker
     platform: i2s_audio
