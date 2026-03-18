@@ -25,7 +25,7 @@ microphone:
   - id: main_microphone
     platform: i2s_audio
     i2s_audio_id: i2s_audio_bus
-    i2s_din_pin: GPIO8  # DIN from ES8311 ADC (codec→ESP32, mic path)
+    i2s_din_pin: GPIO6  # ASDOUT from Codec -> I2S_DI on ESP32
     adc_type: external
     bits_per_sample: 16bit
     sample_rate: 48000
@@ -35,7 +35,7 @@ speaker:
   - id: main_speaker
     platform: i2s_audio
     i2s_audio_id: i2s_audio_bus
-    i2s_dout_pin: GPIO6  # DOUT to ES8311 DAC (ESP32→codec, speaker path)
+    i2s_dout_pin: GPIO8  # I2S_DO from ESP32 -> DSDIN on Codec
     dac_type: external
     audio_dac: es8311_dac
     bits_per_sample: 16bit
