@@ -1,0 +1,52 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: Apache-2.0
+
+# Display: ILI9341V, 2.8" IPS TFT, 240×320, SPI
+# Touch: FT6336G capacitive, I2C
+# RGB LED: WS2812B on GPIO42
+
+output:
+  - id: display_backlight
+    platform: ledc
+    pin: GPIO45  # LCD_BL (active high)
+
+light:
+  - id: display_backlight_light
+    platform: monochromatic
+    name: Display Backlight
+    icon: "mdi:television"
+    entity_category: config
+    output: display_backlight
+    restore_mode: RESTORE_DEFAULT_ON
+    default_transition_length: 0ms
+
+  - id: status_led
+    platform: esp32_rmt_led_strip
+    name: Status LED
+    pin: GPIO42  # WS2812B
+    num_leds: 1
+    rgb_order: GRB
+    chipset: WS2812
+
+display:
+  - id: main_display
+    platform: ili9xxx
+    model: ILI9341
+    spi_id: spi_bus
+    cs_pin: GPIO10   # LCD_CS
+    dc_pin: GPIO46   # LCD_DC
+    # RST is tied to the EN (system reset) pin; no software reset available.
+    invert_colors: false
+    data_rate: 40MHz
+    update_interval: never
+    auto_clear_enabled: false
+
+touchscreen:
+  - id: main_touchscreen
+    platform: ft63x6
+    i2c_id: i2c_bus
+    display: main_display
+    interrupt_pin: GPIO17  # Touch IRQ (active low)
+    # RST is active low. ESPHome ft63x6 drives the pin LOW then HIGH to reset,
+    # so inverted must NOT be set (that would leave the chip held in reset).
+    reset_pin: GPIO18
