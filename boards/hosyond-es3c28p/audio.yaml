@@ -1,0 +1,54 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: Apache-2.0
+
+# Audio codec: ES8311 (I2C control + I2S data), shared I2C bus on GPIO15/16
+# Amplifier: FM8002E, enabled via GPIO1 (active low)
+# Microphone: MEMS LMA2718B381 (via ES8311 ADC)
+# Speaker connector: 1.25mm 2P
+
+i2s_audio:
+  - id: i2s_audio_bus
+    i2s_mclk_pin: GPIO4   # MCLK
+    i2s_bclk_pin: GPIO5   # BCLK
+    i2s_lrclk_pin: GPIO7  # LRCK
+
+audio_dac:
+  - id: es8311_dac
+    platform: es8311
+    i2c_id: i2c_bus
+    use_microphone: true
+    bits_per_sample: 16bit
+    sample_rate: 48000
+
+# TODO(fortuna): I haven't validated the microphone config yet.
+microphone:
+  - id: main_microphone
+    platform: i2s_audio
+    i2s_audio_id: i2s_audio_bus
+    i2s_din_pin: GPIO6  # ASDOUT from Codec -> I2S_DI on ESP32
+    adc_type: external
+    bits_per_sample: 16bit
+    sample_rate: 48000
+
+speaker:
+  - id: main_speaker
+    platform: i2s_audio
+    i2s_audio_id: i2s_audio_bus
+    i2s_dout_pin: GPIO8  # I2S_DO from ESP32 -> DSDIN on Codec
+    dac_type: external
+    audio_dac: es8311_dac
+    bits_per_sample: 16bit
+    sample_rate: 48000
+    channel: mono
+
+switch:
+  # FM8002E amplifier enable — must be on (low) to hear speaker output
+  - id: enable_speaker_amp
+    platform: gpio
+    name: Enable Speaker
+    pin:
+      number: GPIO1
+      inverted: true  # Active low
+    restore_mode: RESTORE_DEFAULT_ON
+    entity_category: config
+    disabled_by_default: true

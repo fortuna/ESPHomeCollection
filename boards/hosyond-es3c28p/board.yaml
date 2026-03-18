@@ -1,0 +1,73 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: Apache-2.0
+
+# Hosyond ES3C28P — 2.8" 240×320 IPS TFT ESP32-S3 display board with capacitive touch
+#
+# References:
+# - https://hosyond.com/
+# - https://www.lcdwiki.com/2.8inch_ESP32-S3_Display
+# - Schematic: https://www.lcdwiki.com/res/ES3C28P/2.8inch_ESP32-S3_Display_Schematic.pdf
+# - User manual: https://www.lcdwiki.com/res/ES3C28P/2.8inch_IPS_ESP32-S3_ES3C28P_ES3N28P_User_Manual.pdf
+
+packages:
+  display: !include ./display.yaml
+  audio: !include ./audio.yaml
+
+esp32:
+  board: esp32-s3-devkitc-1
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+# SPI bus — shared by the ILI9341 display
+spi:
+  - id: spi_bus
+    clk_pin: GPIO12   # LCD_CLK
+    mosi_pin: GPIO11  # LCD_MOSI
+    miso_pin: GPIO13  # LCD_MISO
+
+# I2C bus — shared by FT6336 touch controller and ES8311 audio codec
+i2c:
+  - id: i2c_bus
+    scl: GPIO15
+    sda: GPIO16
+    scan: true
+    frequency: 400kHz
+
+# NOTE: ESPHome does not yet implement sd_mmc_card. Uncomment once supported:
+# SD card (SDIO 4-bit): CLK=IO38, CMD=IO40, D0=IO39, D1=IO41, D2=IO48, D3=IO47
+#
+# sd_mmc_card:
+#   id: sd_card
+#   clk_pin: GPIO38
+#   cmd_pin: GPIO40
+#   data0_pin: GPIO39
+#   data1_pin: GPIO41
+#   data2_pin: GPIO48
+#   data3_pin: GPIO47
+#   mode_1bit: false
+
+binary_sensor:
+  - id: boot_button
+    platform: gpio
+    name: Boot Button
+    pin:
+      number: GPIO0
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+
+sensor:
+  - id: battery_voltage
+    platform: adc
+    pin: GPIO9
+    name: Battery Voltage
+    attenuation: 12dB
+    update_interval: 60s
+    filters:
+      - multiply: 2.0  # Voltage divider on the ADC pin

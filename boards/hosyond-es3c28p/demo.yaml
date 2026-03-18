@@ -1,0 +1,175 @@
+# Copyright 2025 Vinicius Fortuna
+# SPDX-License-Identifier: Apache-2.0
+
+packages:
+  board: !include ./board.yaml
+
+esphome:
+  name: hosyond-es3c28p-demo
+  friendly_name: Hosyond ES3C28P Demo
+  on_boot:
+    priority: -100
+    then:
+      - switch.turn_on: enable_speaker_amp
+      - delay: 500ms
+      # Set a reasonable default volume
+      - speaker.volume_set:
+          id: main_speaker
+          volume: 0.5
+      - light.turn_on:
+          id: status_led
+          red: 0%
+          green: 100%
+          blue: 0%
+          brightness: 50%
+      - rtttl.play: "boot:d=1,o=4,b=60:c"
+
+logger:
+
+rtttl:
+  speaker: main_speaker
+  gain: 0.2
+
+# Boot button: play a sound and toggle LED
+binary_sensor:
+  - id: !extend boot_button
+    on_press:
+      - light.toggle: status_led
+      - rtttl.play: "click:d=8,o=5,b=160:c6,e6"
+
+# Update battery label when ADC fires
+sensor:
+  - id: !extend battery_voltage
+    on_value:
+      - lvgl.label.update:
+          id: battery_label
+          text:
+            format: "%.2fV"
+            args: [x]
+
+lvgl:
+  displays: [main_display]
+  touchscreens: [main_touchscreen]
+  pages:
+    - id: main_page
+      widgets:
+        - label:
+            align: top_mid
+            y: 8
+            text: "ES3C28P Demo"
+        - label:
+            id: battery_label
+            align: top_right
+            x: -8
+            y: 8
+            text: "--V"
+
+        - label:
+            x: 8
+            y: 52
+            text: "R"
+        - slider:
+            id: red_slider
+            x: 28
+            y: 42
+            width: 190
+            min_value: 0
+            max_value: 255
+            on_value:
+              - light.turn_on:
+                  id: status_led
+                  red: !lambda "return lv_slider_get_value(id(red_slider)) / 255.0f;"
+                  green: !lambda "return lv_slider_get_value(id(green_slider)) / 255.0f;"
+                  blue: !lambda "return lv_slider_get_value(id(blue_slider)) / 255.0f;"
+                  brightness: 1.0
+
+        - label:
+            x: 8
+            y: 102
+            text: "G"
+        - slider:
+            id: green_slider
+            x: 28
+            y: 92
+            width: 190
+            min_value: 0
+            max_value: 255
+            on_value:
+              - light.turn_on:
+                  id: status_led
+                  red: !lambda "return lv_slider_get_value(id(red_slider)) / 255.0f;"
+                  green: !lambda "return lv_slider_get_value(id(green_slider)) / 255.0f;"
+                  blue: !lambda "return lv_slider_get_value(id(blue_slider)) / 255.0f;"
+                  brightness: 1.0
+
+        - label:
+            x: 8
+            y: 152
+            text: "B"
+        - slider:
+            id: blue_slider
+            x: 28
+            y: 142
+            width: 190
+            min_value: 0
+            max_value: 255
+            on_value:
+              - light.turn_on:
+                  id: status_led
+                  red: !lambda "return lv_slider_get_value(id(red_slider)) / 255.0f;"
+                  green: !lambda "return lv_slider_get_value(id(green_slider)) / 255.0f;"
+                  blue: !lambda "return lv_slider_get_value(id(blue_slider)) / 255.0f;"
+                  brightness: 1.0
+
+        - label:
+            x: 8
+            y: 202
+            text: "BL"
+        - slider:
+            id: backlight_slider
+            x: 28
+            y: 192
+            width: 190
+            min_value: 0
+            max_value: 100
+            value: 100
+            on_value:
+              - light.turn_on:
+                  id: display_backlight_light
+                  brightness: !lambda "return lv_slider_get_value(id(backlight_slider)) / 100.0f;"
+
+        - label:
+            x: 8
+            y: 255
+            text: "Amp"
+        - switch:
+            id: amp_ui_switch
+            x: 44
+            y: 248
+            state:
+              checked: true
+            on_click:
+              - if:
+                  condition:
+                    lambda: 'return lv_obj_has_state(id(amp_ui_switch), LV_STATE_CHECKED);'
+                  then:
+                    - switch.turn_on: enable_speaker_amp
+                  else:
+                    - switch.turn_off: enable_speaker_amp
+        - button:
+            id: sound_btn
+            x: 130
+            y: 242
+            width: 100
+            height: 36
+            on_click:
+              - rtttl.play: "ui:d=8,o=5,b=160:e6,g6"
+            widgets:
+              - label:
+                  align: center
+                  text: "Sound"
+
+        - label:
+            align: bottom_mid
+            y: -8
+            text: "Boot btn: toggle LED + sound"
