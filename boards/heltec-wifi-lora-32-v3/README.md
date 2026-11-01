@@ -34,9 +34,16 @@ On 2026-11-01, lint, configuration validation and compilation passed with ESPHom
 2026.9.1 / ESP-IDF 5.5.5 (300791-byte image). The review revision also passes
 ESPHome 2026.10.1 / ESP-IDF 5.5.6 (299371-byte image); moving startup settings
 into the demo leaves its merged configuration unchanged. The extracted
-radio/OLED/power wiring was previously exercised on a physical V3 during a separate ESPHome
-MeshCore prototype. This standalone demo and the GPIO35 LED interaction have not
-been flashed/tested; compilation is the acceptance evidence for this PR.
+radio/OLED/power wiring was previously exercised on a physical V3 during a
+separate ESPHome MeshCore prototype.
+
+The standalone demo from revision `88d0205` was flashed on 2026-11-01. Serial
+logs confirm successful startup, active Vext, SSD1306 I2C initialization and the
+SX1262 radio profile without setup errors. The device partition table matched;
+NVS remained byte-for-byte unchanged after flashing and after boot. Previous
+room identities and history were preserved in storage, though this demo does not
+run room services. The user confirmed the OLED display and PRG button toggling
+the white LED. Received-packet activity on this demo remains unconfirmed.
 Battery measurement/charge status are not exposed by this package.
 
 Sources checked 2026-11-01:
