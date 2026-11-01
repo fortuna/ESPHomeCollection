@@ -9,8 +9,6 @@ All board configurations are in the [`boards` directory](./boards/). Each board 
   * `board.yaml`: the hardware definition. No application logic, automation, api or wifi provisioning. 
   * `demo.yaml`: a simple firmware that illustrates and exercises the board components.
 
-- [Heltec WiFi LoRa 32 V3](boards/heltec-wifi-lora-32-v3/): ESP32-S3, SX1262, OLED, PRG button and LED; receive-only demo.
-
 The board slug is lowercase, hyphenated (e.g., `esp32-s3-box-3`, `esp32-c3-devkitm-1`).
 
 
@@ -57,100 +55,10 @@ Then run it from your local file. For example:
 esphome run ./demo.yaml
 ```
 
-## Development
+## Contributing
 
-Contributions of new boards are welcome.
-
-### Install the tooling
-
-```sh
-pip install esphome yamllint
-```
-
-You may need to use `pip3` or `pipx` depending on your system.
-
-On macOS, if you have [Homebrew installed](https://brew.sh/), use:
-
-```sh
-brew install esphome yamllint
-```
-
-### Add a new board
-
-1. **Create folder**: `boards/<board-slug>/`, where `<oard-slug>` is lowercase, hyphenated (e.g., `esp32-s3-box-3`, `esp32-c3-devkitm-1`).
-1. **Author `board.yaml`** (hardware only):
-    * No `esphome:` entry.
-    * No `wifi:`, `api`, `ota`, `logger`, etc.
-    * `esp32:` block set for the exact devkit and `esp-idf` framework, for example:
-      ```yaml
-      esp32:
-        board: esp32-c3-devkitm-1
-        framework:
-          type: esp-idf
-      ```
-    * Define all the harware components (pins, buses, sensors, displays, audio, etc)
-    * **No app logic**, including logging and automations.
-
-1. **Author `demo.yaml`** (minimal, friendly):
-    * Include the board and add the `esphome` and `logger` blocks:
-
-      ```yaml
-      packages:
-        board: !include ./board.yaml
-
-      esphome:
-        name: board-demo
-        friendly_name: Board Demo
-
-      logger:
-        level: DEBUG
-      ```
-    * Include minimal features to exercise hardware. Try to exercise all hardware components if possible. No `wifi`.
-
-1. **Run checks**
-    * Run linter:
-      ```sh
-      yamllint boards/<board>
-      ```
-      The YAML style is defined in [.yamllint](./.yamllint).
-
-    * Build:
-      ```sh
-      esphome compile boards/<board>/demo.yaml
-      ```
-      This must use the `demo.yaml` because the board config is incomplete.
-
-1. Flash it into an actual device to verify it works.
-      ```sh
-      esphome run boards/<board>/demo.yaml
-      ```
-
-   <!-- 1. **Docs**:
-   * Update **README** “Available Boards” with the new directory and a one-line description. -->
-
-1. **Submit PR**:
-   * Title: `[board] <board-slug>: add board + demo`
-   * Ensure the tests pass.
-
-Note: You can quickly validate all configs and lint them in one command:
-
-```sh
-esphome config boards/*/demo.yaml && yamllint .
-```
-
-To build all the boards, it's recommended to set up a build cache:
-```sh
-export PLATFORMIO_BUILD_CACHE_DIR=/tmp/esphome_cache
-esphome build boards/*/demo.yaml
-```
-
-### Clean up
-
-To remove the generated files
-
-```sh
-rm -rf boards/*/{.esphome,.gitignore}
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for tooling, board conventions, validation
+and the pull request workflow.
 
 ## TODO
   - Add ESP32-C6 dev board

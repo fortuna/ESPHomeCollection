@@ -13,6 +13,12 @@ logger:
   baud_rate: 115200
   hardware_uart: UART0
 
+# Power the OLED/Vext rail before I2C recovery, then allow it to settle.
+power_supply:
+  - id: !extend oled_power
+    enable_on_boot: true
+    enable_time: 20ms
+
 # Receive-only NYC MeshCore radio profile. Match your local network/band.
 # This demonstrates raw LoRa reception, not MeshCore message decoding.
 sx126x:

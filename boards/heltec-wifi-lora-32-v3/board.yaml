@@ -27,14 +27,12 @@ sx126x:
     tcxo_voltage: 1_8V
     tcxo_delay: 5ms
 
-# Vext is active low; power must settle before I2C initialization.
+# Vext is active low; the application selects its startup power policy.
 power_supply:
   - id: oled_power
     pin:
       number: GPIO36
       inverted: true
-    enable_on_boot: true
-    enable_time: 20ms
 
 i2c:
   - id: oled_i2c
