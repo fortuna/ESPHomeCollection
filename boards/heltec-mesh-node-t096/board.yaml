@@ -1,0 +1,71 @@
+# Copyright 2026 Vinicius Fortuna
+# SPDX-License-Identifier: Apache-2.0
+#
+# Experimental GPIO-only T096 bring-up. Not a complete radio/display board port.
+# Sources, bootloader assumptions and unsupported peripherals: README.md.
+nrf52:
+  # Compatibility build profile for the same MCU, not a native T096 definition.
+  board: adafruit_itsybitsy_nrf52840
+  bootloader: adafruit_nrf52_sd140_v6
+  dcdc: false
+
+# The helper disables non-T096 peripheral wiring inherited from that profile.
+# For a config outside this board directory, override the path substitution.
+substitutions:
+  t096_components_path: components
+
+external_components:
+  - source:
+      type: local
+      path: ${t096_components_path}
+    components: [heltec_t096_platform]
+
+heltec_t096_platform:
+
+binary_sensor:
+  - platform: gpio
+    id: boot_button
+    name: User Button
+    pin:
+      number: P1.10
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+
+output:
+  - platform: gpio
+    id: led_output
+    pin: P0.28
+  # GPIO outputs start off. Drivers must own rail sequencing before use.
+  - platform: gpio
+    id: peripheral_power
+    pin: P0.26
+  - platform: gpio
+    id: gnss_power
+    pin:
+      number: P0.06
+      inverted: true
+  - platform: gpio
+    id: display_backlight
+    pin:
+      number: P1.12
+      inverted: true
+  - platform: gpio
+    id: fem_power
+    pin: P0.30
+  - platform: gpio
+    id: fem_enable
+    pin: P0.12
+  - platform: gpio
+    id: fem_path_select
+    pin: P1.09
+  - platform: gpio
+    id: battery_adc_enable
+    pin: P1.15
+
+light:
+  - platform: binary
+    id: led
+    name: Board LED
+    output: led_output

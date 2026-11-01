@@ -9,6 +9,8 @@ All board configurations are in the [`boards` directory](./boards/). Each board 
   * `board.yaml`: the hardware definition. No application logic, automation, api or wifi provisioning. 
   * `demo.yaml`: a simple firmware that illustrates and exercises the board components.
 
+- [Heltec Mesh Node T096](boards/heltec-mesh-node-t096/): experimental nRF52840 GPIO bring-up only; LoRa, TFT and GNSS are not implemented.
+
 The board slug is lowercase, hyphenated (e.g., `esp32-s3-box-3`, `esp32-c3-devkitm-1`).
 
 
