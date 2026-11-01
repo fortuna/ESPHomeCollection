@@ -1,0 +1,80 @@
+# Copyright 2026 Vinicius Fortuna
+# SPDX-License-Identifier: Apache-2.0
+
+packages:
+  board: !include board.yaml
+
+esphome:
+  name: heltec-v3-demo
+  friendly_name: Heltec V3 Demo
+  min_version: 2026.9.1
+
+logger:
+  baud_rate: 115200
+  hardware_uart: UART0
+
+# Power the OLED/Vext rail before I2C recovery, then allow it to settle.
+power_supply:
+  - id: !extend oled_power
+    enable_on_boot: true
+    enable_time: 20ms
+
+# Receive-only NYC MeshCore radio profile. Match your local network/band.
+# This demonstrates raw LoRa reception, not MeshCore message decoding.
+sx126x:
+  - id: !extend lora_radio
+    frequency: 910.525MHz
+    bandwidth: 62_5kHz
+    spreading_factor: 7
+    coding_rate: CR_4_5
+    modulation: LORA
+    sync_value: [0x14, 0x24]
+    preamble_size: 32
+    crc_enable: true
+    payload_length: 0
+    rx_start: true
+    pa_power: 0
+    on_packet:
+      then:
+        - lambda: |-
+            id(packet_count)++;
+            id(last_rssi) = rssi;
+            id(last_snr) = snr;
+
+globals:
+  - id: packet_count
+    type: uint32_t
+    initial_value: '0'
+  - id: last_rssi
+    type: float
+    initial_value: '0'
+  - id: last_snr
+    type: float
+    initial_value: '0'
+
+binary_sensor:
+  - id: !extend boot_button
+    filters:
+      - delayed_on_off: 30ms
+    on_press:
+      - light.toggle: led
+      - component.update: oled_display
+
+font:
+  - file: gfonts://Roboto Mono@400
+    id: demo_font
+    size: 11
+    bpp: 1
+
+display:
+  - id: !extend oled_display
+    update_interval: 1s
+    lambda: |-
+      it.print(0, 0, id(demo_font), "Heltec V3 / LoRa RX");
+      it.printf(0, 12, id(demo_font), "Packets: %lu",
+                static_cast<unsigned long>(id(packet_count)));
+      if (id(packet_count)) {
+        it.printf(0, 24, id(demo_font), "RSSI: %.0f dBm", id(last_rssi));
+        it.printf(0, 36, id(demo_font), "SNR: %.1f dB", id(last_snr));
+      }
+      it.print(0, 48, id(demo_font), "PRG toggles LED");
