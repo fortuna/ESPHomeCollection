@@ -16,24 +16,24 @@ logger:
 # Receive-only NYC MeshCore radio profile. Match your local network/band.
 # This demonstrates raw LoRa reception, not MeshCore message decoding.
 sx126x:
-  id: lora_radio
-  frequency: 910.525MHz
-  bandwidth: 62_5kHz
-  spreading_factor: 7
-  coding_rate: CR_4_5
-  modulation: LORA
-  sync_value: [0x14, 0x24]
-  preamble_size: 32
-  crc_enable: true
-  payload_length: 0
-  rx_start: true
-  pa_power: 0
-  on_packet:
-    then:
-      - lambda: |-
-          id(packet_count)++;
-          id(last_rssi) = rssi;
-          id(last_snr) = snr;
+  - id: !extend lora_radio
+    frequency: 910.525MHz
+    bandwidth: 62_5kHz
+    spreading_factor: 7
+    coding_rate: CR_4_5
+    modulation: LORA
+    sync_value: [0x14, 0x24]
+    preamble_size: 32
+    crc_enable: true
+    payload_length: 0
+    rx_start: true
+    pa_power: 0
+    on_packet:
+      then:
+        - lambda: |-
+            id(packet_count)++;
+            id(last_rssi) = rssi;
+            id(last_snr) = snr;
 
 globals:
   - id: packet_count

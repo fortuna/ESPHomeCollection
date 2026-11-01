@@ -11,7 +11,9 @@ packages:
 
 Include this package from your device configuration. It contains hardware only;
 add your logger, network/radio profile, fonts, display content and button actions
-in that configuration. Extend `oled_display` and `boot_button` with `!extend`.
+in that configuration. Extend the list entries by ID with `!extend`, including
+`lora_radio`, `oled_display` and `boot_button`. The demo uses
+`- id: !extend lora_radio` under `sx126x` to supply the network profile.
 `lora_radio` identifies the SX1262 and `led` the onboard white LED. `oled_power`
 drives the active-low Vext rail on GPIO36 before I2C recovery; the header Vext
 supply shares that rail. The OLED uses SDA17/SCL18, reset21, address 0x3C.
