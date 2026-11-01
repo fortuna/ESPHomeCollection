@@ -5,6 +5,10 @@ ESP32. This package models its LED, user button and peripheral-control GPIOs.
 The demo toggles the white LED when the button is pressed and logs over USB CDC.
 LoRa, TFT, GNSS, battery measurement and MeshCore services are not implemented.
 
+See the root README for [running demos](../../README.md#trying-out-the-demos)
+and [development commands](../../README.md#development). This draft requires a
+local checkout; its helper and bootloader constraints are described below.
+
 ## Build profile and bootloader
 
 ESPHome has no native T096 board definition. This draft uses its documented
@@ -34,7 +38,7 @@ it with a native T096 Zephyr board definition.
 
 ## Hardware definitions
 
-All modeled hardware is in `board.yaml`; the application behavior is in `demo.yaml`.
+The [board package](board.yaml) exposes the GPIOs below.
 The outputs start logically off, including the active-low GNSS and backlight
 controls. The demo never enables these peripheral outputs. Their initialization
 levels have source/code inspection, not physical measurements.
@@ -73,14 +77,6 @@ The board package does not satisfy the ESP32/ESP-IDF requirement of the separate
 esphome-meshcore prototype. That project needs nRF52 platform adapters too.
 
 ## Validation
-
-Commands from the repository root:
-
-```sh
-yamllint boards/heltec-mesh-node-t096
-esphome config boards/heltec-mesh-node-t096/demo.yaml
-esphome compile boards/heltec-mesh-node-t096/demo.yaml
-```
 
 Configuration, repository YAML lint, and compilation pass with ESPHome 2026.9.1
 and the native sdk-nrf toolchain / nRF Connect SDK 2.9.2. The generated UF2 starts

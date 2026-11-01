@@ -3,6 +3,9 @@
 Read [README.md](README.md) for the repository layout, board/demo conventions,
 development commands, and contribution process. Keep board-specific capabilities,
 source references, and verification limits in the board's README.
+Keep shared usage and development instructions in the root README; link to
+those sections from board READMEs instead of repeating them. Document board-specific
+exceptions locally.
 
 ## Composable ESPHome packages
 
