@@ -9,6 +9,8 @@ All board configurations are in the [`boards` directory](./boards/). Each board 
   * `board.yaml`: the hardware definition. No application logic, automation, api or wifi provisioning. 
   * `demo.yaml`: a simple firmware that illustrates and exercises the board components.
 
+- [Heltec WiFi LoRa 32 V3](boards/heltec-wifi-lora-32-v3/): ESP32-S3, SX1262, OLED, PRG button and LED; receive-only demo.
+
 The board slug is lowercase, hyphenated (e.g., `esp32-s3-box-3`, `esp32-c3-devkitm-1`).
 
 

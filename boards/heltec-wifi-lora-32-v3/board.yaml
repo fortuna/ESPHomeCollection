@@ -1,0 +1,76 @@
+# Copyright 2026 Vinicius Fortuna
+# SPDX-License-Identifier: Apache-2.0
+#
+# Heltec WiFi LoRa 32 V3 (ESP32-S3, 8 MB flash, SX1262, OLED).
+# Sources and verification status are in README.md beside this file.
+esp32:
+  board: heltec_wifi_lora_32_V3
+  flash_size: 8MB
+  framework:
+    type: esp-idf
+
+spi:
+  id: lora_spi
+  clk_pin: GPIO9
+  mosi_pin: GPIO10
+  miso_pin: GPIO11
+
+sx126x:
+  id: lora_radio
+  spi_id: lora_spi
+  hw_version: sx1262
+  cs_pin: GPIO8
+  rst_pin: GPIO12
+  busy_pin: GPIO13
+  dio1_pin: GPIO14
+  rf_switch: true
+  tcxo_voltage: 1_8V
+  tcxo_delay: 5ms
+
+# Vext is active low; power must settle before I2C initialization.
+power_supply:
+  - id: oled_power
+    pin:
+      number: GPIO36
+      inverted: true
+    enable_on_boot: true
+    enable_time: 20ms
+
+i2c:
+  id: oled_i2c
+  sda: GPIO17
+  scl: GPIO18
+  frequency: 400kHz
+  # The display checks its own connection; no full bus scan is needed.
+  scan: false
+
+display:
+  - platform: ssd1306_i2c
+    id: oled_display
+    i2c_id: oled_i2c
+    model: "SSD1306 128x64"
+    address: 0x3C
+    reset_pin: GPIO21
+
+binary_sensor:
+  - platform: gpio
+    id: boot_button
+    internal: true
+    pin:
+      number: GPIO0
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+      ignore_strapping_warning: true
+
+output:
+  - platform: gpio
+    id: led_output
+    pin: GPIO35
+
+light:
+  - platform: binary
+    id: led
+    name: Board LED
+    output: led_output
