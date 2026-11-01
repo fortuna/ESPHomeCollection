@@ -1,0 +1,29 @@
+# Copyright 2026 Vinicius Fortuna
+# SPDX-License-Identifier: Apache-2.0
+#
+# GPIO bring-up only: press the user button to toggle the white LED.
+# No radio, display, GNSS, network, or MeshCore implementation is included.
+packages:
+  board: !include board.yaml
+
+esphome:
+  name: heltec-t096-demo
+  friendly_name: Heltec T096 GPIO Demo
+  min_version: 2026.9.1
+
+nrf52:
+  toolchain: sdk-nrf
+  framework:
+    version: 2.9.2
+    libc_nano: false
+
+logger:
+  level: DEBUG
+
+binary_sensor:
+  - id: !extend boot_button
+    filters:
+      - delayed_on_off: 30ms
+    on_press:
+      - light.toggle: led
+      - logger.log: T096 user button pressed
