@@ -66,6 +66,25 @@ output:
   - platform: gpio
     id: led_output
     pin: GPIO35
+  # Active-low divider gate per the earlier schematic. Revisions can invert this;
+  # see README.md before using the ADC on another hardware revision.
+  - platform: gpio
+    id: battery_adc_enable
+    pin:
+      number: GPIO37
+      inverted: true
+
+sensor:
+  - platform: adc
+    id: battery_voltage
+    name: Battery Voltage
+    pin: GPIO1
+    attenuation: 0db
+    samples: 8
+    # The application enables the divider, waits, samples, then disables it.
+    update_interval: never
+    filters:
+      - multiply: 4.9  # (390k + 100k) / 100k; ESPHome reports calibrated volts.
 
 light:
   - platform: binary
