@@ -8,6 +8,10 @@ esphome:
   name: heltec-v3-demo
   friendly_name: Heltec V3 Demo
   min_version: 2026.9.1
+  on_boot:
+    priority: -100
+    then:
+      - script.execute: sample_battery_voltage
 
 logger:
   baud_rate: 115200
@@ -18,6 +22,21 @@ power_supply:
   - id: !extend oled_power
     enable_on_boot: true
     enable_time: 20ms
+
+# Sample the gated battery divider without blocking other components while it settles.
+interval:
+  - interval: 30s
+    then:
+      - script.execute: sample_battery_voltage
+
+script:
+  - id: sample_battery_voltage
+    mode: single
+    then:
+      - output.turn_on: battery_adc_enable
+      - delay: 10ms
+      - component.update: battery_voltage
+      - output.turn_off: battery_adc_enable
 
 # Receive-only NYC MeshCore radio profile. Match your local network/band.
 # This demonstrates raw LoRa reception, not MeshCore message decoding.
@@ -77,4 +96,7 @@ display:
         it.printf(0, 24, id(demo_font), "RSSI: %.0f dBm", id(last_rssi));
         it.printf(0, 36, id(demo_font), "SNR: %.1f dB", id(last_snr));
       }
-      it.print(0, 48, id(demo_font), "PRG toggles LED");
+      if (id(battery_voltage).has_state() && std::isfinite(id(battery_voltage).state))
+        it.printf(0, 48, id(demo_font), "VBAT: %.2f V", id(battery_voltage).state);
+      else
+        it.print(0, 48, id(demo_font), "VBAT: unknown");
